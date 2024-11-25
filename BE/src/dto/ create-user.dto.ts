@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
+  Length,
 } from 'class-validator';
 
 export class RegisterUserBodyDTO {
@@ -23,9 +24,13 @@ export class RegisterUserBodyDTO {
   @IsOptional()
   role?: string; // 'customer', 'admin', 'staff'
 }
-
-export class RefreshTokenBodyDTO {
+export class UpdateUsersDTO {
   @IsNotEmpty()
   @IsString()
-  refreshToken: string;
+  @Length(10)
+  phone: string;
+
+  @IsString()
+  @IsNotEmpty()
+  fullName: string;
 }

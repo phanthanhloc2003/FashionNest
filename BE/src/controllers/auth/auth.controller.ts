@@ -7,7 +7,7 @@ import { Request as RequestCookie } from 'supertest';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: Authservices) {}
-  @Post()
+  @Post('login')
   @PublicRouter()
   @UseGuards(LocalAuthGuard)
   async login(@Request() req, @Res({ passthrough: true }) response: Response) {

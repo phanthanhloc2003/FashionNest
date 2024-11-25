@@ -1,5 +1,11 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { RegisterUserBodyDTO } from 'src/dto/ create-user.dto';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
+import { RegisterUserBodyDTO, UpdateUsersDTO } from 'src/dto/ create-user.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { User, UserNoPassword } from 'src/entitys/user.entity';
@@ -44,6 +50,40 @@ export class UserService {
       });
     } catch (error) {
       this.logger.error('Error finding user by phone', error.stack);
+      throw error;
+    }
+  }
+
+  async updateUser(
+    user: UserNoPassword,
+    param: UpdateUsersDTO,
+  ): Promise<string> {
+    try {
+      const { phone } = param;
+      const existingUser = await this.findOneByPhone(user.phone);
+      if (!existingUser) {
+        throw new NotFoundException(`User with phone ${user.phone} not found`);
+      }
+
+      const ischeckphone = await this.findOneByPhone(phone);
+      if (ischeckphone) {
+        throw new ConflictException(
+          `Phone number ${phone} already exists, please enter another phone number`,
+        );
+      }
+      const userUpdate = await this.userRepository.update(
+        { phone: user.phone },
+        param,
+      );
+      if (userUpdate.affected === 0) {
+        throw new NotFoundException(`User with phone ${user.phone} not found`);
+      }
+      return 'succsess';
+    } catch (error) {
+      this.logger.error('Error updating user', {
+        error: error.stack,
+        phone: user.phone,
+      });
       throw error;
     }
   }
