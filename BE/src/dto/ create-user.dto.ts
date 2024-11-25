@@ -23,3 +23,9 @@ export class RegisterUserBodyDTO {
   @IsOptional()
   role?: string; // 'customer', 'admin', 'staff'
 }
+
+export class RefreshTokenBodyDTO {
+  @IsNotEmpty()
+  @IsString()
+  refreshToken: string;
+}
