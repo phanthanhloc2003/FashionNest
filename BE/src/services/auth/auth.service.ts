@@ -25,6 +25,7 @@ export class Authservices {
       if (user && bcrypt.compareSync(pass, user?.passwordHash)) {
         const result = { ...user };
         delete result.passwordHash;
+        delete result.role;
         return result;
       }
       throw new HttpException(
@@ -49,7 +50,6 @@ export class Authservices {
       phone: user.phone,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-      role: user.role,
     };
     return {
       access_token: this.jwtService.sign(payload),

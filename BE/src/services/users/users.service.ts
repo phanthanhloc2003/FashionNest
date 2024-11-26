@@ -39,6 +39,7 @@ export class UserService {
       });
       const newUser = await this.userRepository.save(user);
       delete newUser.passwordHash;
+      delete newUser.role;
       return newUser;
     } catch (error) {
       this.logger.error('Error creating user', error.stack);
@@ -100,6 +101,7 @@ export class UserService {
       }
       const deletedUserData = { ...existingUser };
       delete deletedUserData.passwordHash;
+      delete deletedUserData.role;
       await queryRunner.manager.update(User, existingUser.id, {
         isActive: false,
         deletedAt: new Date(),
@@ -123,5 +125,9 @@ export class UserService {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  async findAll(): Promise<User[]> {
+    return await this.userRepository.find();
   }
 }

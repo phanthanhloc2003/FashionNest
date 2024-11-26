@@ -49,4 +49,11 @@ export class UsersController {
   async userDelete(@Param() param: GetUserDTO) {
     return await this.usersService.delete(param.phone);
   }
+
+  @Get()
+  @Roles(Role.Admin)
+  @UseGuards(RolesGuard)
+  async getAllUsers() {
+    return await this.usersService.findAll();
+  }
 }
