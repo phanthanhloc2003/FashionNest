@@ -2,6 +2,7 @@ import {
   ConflictException,
   Inject,
   Injectable,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
@@ -9,12 +10,13 @@ import { RegisterUserBodyDTO, UpdateUsersDTO } from 'src/dto/ create-user.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { User, UserNoPassword } from 'src/entitys/user.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
   constructor(
+    @Inject('DATA_SOURCE') private readonly dataSource: DataSource,
     @Inject('USER_REPOSITORY')
     private userRepository: Repository<User>,
   ) {}
@@ -85,6 +87,41 @@ export class UserService {
         phone: user.phone,
       });
       throw error;
+    }
+  }
+
+  async delete(phone: string): Promise<User> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.startTransaction();
+    try {
+      const existingUser = await this.findOneByPhone(phone);
+      if (!existingUser) {
+        throw new NotFoundException(`User with phone ${phone} not found`);
+      }
+      const deletedUserData = { ...existingUser };
+      delete deletedUserData.passwordHash;
+      await queryRunner.manager.update(User, existingUser.id, {
+        isActive: false,
+        deletedAt: new Date(),
+      });
+      await queryRunner.commitTransaction();
+      this.logger.log(`Successfully deleted user with phone: ${phone}`);
+      return deletedUserData;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      this.logger.error('Failed to delete user', {
+        phone,
+        error: error.stack,
+        timestamp: new Date().toISOString(),
+      });
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'An error occurred while deleting the user. Please try again later.',
+      );
+    } finally {
+      await queryRunner.release();
     }
   }
 }

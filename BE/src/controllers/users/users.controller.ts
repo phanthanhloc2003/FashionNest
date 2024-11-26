@@ -1,8 +1,24 @@
-import { Body, Controller, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { PublicRouter, User } from 'src/decorators/public-router.decorator';
-import { RegisterUserBodyDTO, UpdateUsersDTO } from 'src/dto/ create-user.dto';
+import { Roles } from 'src/decorators/roles.decorator';
+import {
+  GetUserDTO,
+  RegisterUserBodyDTO,
+  UpdateUsersDTO,
+} from 'src/dto/ create-user.dto';
 import { UserNoPassword } from 'src/entitys/user.entity';
+import { RolesGuard } from 'src/guard/roles.guard';
 import { UserService } from 'src/services/users/users.service';
+import { Role } from 'src/types/role.enum';
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UserService) {}
@@ -25,5 +41,12 @@ export class UsersController {
     @Body() body: UpdateUsersDTO,
   ): Promise<string> {
     return this.usersService.updateUser(user, body);
+  }
+
+  @Delete('user-delete/:phone')
+  @Roles(Role.Admin)
+  @UseGuards(RolesGuard)
+  async userDelete(@Param() param: GetUserDTO) {
+    return await this.usersService.delete(param.phone);
   }
 }

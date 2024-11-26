@@ -34,3 +34,10 @@ export class UpdateUsersDTO {
   @IsNotEmpty()
   fullName: string;
 }
+
+export class GetUserDTO {
+  @IsNotEmpty()
+  @IsString()
+  @Length(10)
+  phone: string;
+}
