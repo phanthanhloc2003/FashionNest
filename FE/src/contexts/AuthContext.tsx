@@ -2,8 +2,6 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { User } from '../types/auth';
 import { authApi } from '../api/userApi';
 
-
-
 interface AuthContextType {
   user: User | null;
   login: (phone: string, password: string) => Promise<void>;

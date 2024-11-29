@@ -1,9 +1,11 @@
 export interface User {
-    id: string;
-    email: string;
-    name: string;
-    role: 'customer' | 'admin';
-  }
+  id: string;
+  phone: string;
+  fullName: string;
+  role: 'customer' | 'admin';
+  isActive: boolean;
+  deletedAt: string | null;
+}
   
   export interface LoginCredentials {
     email: string;

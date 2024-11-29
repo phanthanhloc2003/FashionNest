@@ -15,4 +15,9 @@ export const authApi = {
       const response = await apiClient.post('/auth/logout');
       return response.data;
     },
+
+    role: async () => {
+      const response = await apiClient.get('/users/role');
+      return response.data;
+    },
   };
