@@ -130,4 +130,10 @@ export class UserService {
   async findAll(): Promise<User[]> {
     return await this.userRepository.find();
   }
+
+  async findRole(user: UserNoPassword): Promise<UserNoPassword> {
+    const roleUser = await this.userRepository.findOneBy({ phone: user.phone });
+    delete roleUser.passwordHash;
+    return roleUser;
+  }
 }

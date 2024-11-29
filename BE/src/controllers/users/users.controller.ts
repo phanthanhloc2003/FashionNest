@@ -15,7 +15,7 @@ import {
   RegisterUserBodyDTO,
   UpdateUsersDTO,
 } from 'src/dto/ create-user.dto';
-import { UserNoPassword } from 'src/entitys/user.entity';
+import { User as users, UserNoPassword } from 'src/entitys/user.entity';
 import { RolesGuard } from 'src/guard/roles.guard';
 import { UserService } from 'src/services/users/users.service';
 import { Role } from 'src/types/role.enum';
@@ -53,7 +53,12 @@ export class UsersController {
   @Get()
   @Roles(Role.Admin)
   @UseGuards(RolesGuard)
-  async getAllUsers() {
+  async getAllUsers(): Promise<users[]> {
     return await this.usersService.findAll();
+  }
+
+  @Get('role')
+  async getRole(@User() user: UserNoPassword): Promise<UserNoPassword> {
+    return await this.usersService.findRole(user);
   }
 }
