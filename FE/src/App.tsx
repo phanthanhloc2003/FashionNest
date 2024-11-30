@@ -9,6 +9,8 @@ import { Profile } from './pages/Profile';
 import { ProductDetail } from './pages/ProductDetail';
 import { AdminRoute } from './components/AdminRoute';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { AdminProducts } from './pages/AdminProducts';
+import { AdminCreateProduct } from './pages/AdminCreateProduct';
 
 function App() {
   return (
@@ -47,6 +49,22 @@ function App() {
             element={
               <AdminRoute>
                 <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+           <Route
+            path="/admin/products"
+            element={
+              <AdminRoute>
+                <AdminProducts />
+              </AdminRoute>
+            }
+          />
+            <Route
+            path="/admin/products/create"
+            element={
+              <AdminRoute>
+                <AdminCreateProduct />
               </AdminRoute>
             }
           />
