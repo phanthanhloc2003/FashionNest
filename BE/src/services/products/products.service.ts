@@ -31,35 +31,42 @@ export class ProductsService {
   async create(body: CreateProductDto) {
     try {
       const { variants, images, ...productData } = body;
-      const newProduct = await this.productRepository.create(productData);
+
+      const newProduct = this.productRepository.create(productData);
       await this.productRepository.save(newProduct);
 
-      variants.map((item) => console.log(item));
-
       if (variants?.length) {
-        const variantEntities = await Promise.all(
-          variants.map(async (variant) =>
-            this.variantRepository.create({
-              ...variant,
-              product: newProduct,
-            }),
-          ),
+        const variantEntities = variants.map((variant) =>
+          this.variantRepository.create({
+            ...variant,
+            product: newProduct,
+          }),
         );
-
-        console.log(variantEntities);
         await this.variantRepository.save(variantEntities);
       }
 
       if (images?.length) {
         const imageEntities = images.map((image) =>
-          this.imageRepository.create({ ...image, product: newProduct }),
+          this.imageRepository.create({
+            ...image,
+            product: newProduct,
+          }),
         );
         await this.imageRepository.save(imageEntities);
       }
-
       return await this.productRepository.findOne({
         where: { id: newProduct.id },
+        relations: ['variants', 'images'],
       });
+    } catch (error) {
+      console.error('Error creating product:', error);
+      throw new Error('Failed to create product. Please try again.');
+    }
+  }
+
+  async getProduct(): Promise<Product[]> {
+    try {
+      return await this.productRepository.find();
     } catch (error) {
       throw error;
     }
