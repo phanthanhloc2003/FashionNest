@@ -16,7 +16,7 @@ export function VariantForm() {
         <h3 className="text-lg font-medium text-gray-900">Product Variants</h3>
         <button
           type="button"
-          onClick={() => append({ size: '', color: '', sku: '', stockQuantity: 0, priceAdjustment: 0 })}
+          onClick={() => append({ size: '', color: '', sku: '', stock_quantity: 0, priceAdjustment: 0 })}
           className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700"
         >
           <Plus className="w-4 h-4 mr-1" />
@@ -85,13 +85,13 @@ export function VariantForm() {
                 <label className="block text-sm font-medium text-gray-700">Stock</label>
                 <input
                   type="number"
-                  {...register(`variants.${index}.stockQuantity`, { valueAsNumber: true })}
+                  {...register(`variants.${index}.stock_quantity`, { valueAsNumber: true })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
                   min="0"
                 />
-                {errors.variants?.[index]?.stockQuantity && (
+                {errors.variants?.[index]?.stock_quantity && (
                   <p className="mt-1 text-sm text-red-600">
-                    {errors.variants[index]?.stockQuantity?.message}
+                    {errors.variants[index]?.stock_quantity?.message}
                   </p>
                 )}
               </div>

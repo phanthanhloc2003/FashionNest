@@ -26,7 +26,7 @@ export function AdminCreateProduct() {
   const {
     handleSubmit,
     trigger,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = methods;
 
   const handleNext = async () => {
@@ -35,10 +35,10 @@ export function AdminCreateProduct() {
     if (currentStep === 1) {
       isValid = await trigger([
         "name",
-        "categoryId",
+        "category",
         "description",
         "price",
-        "stockQuantity",
+        "stock_quantity",
         "brand",
       ]);
     } else if (currentStep === 2) {
@@ -60,7 +60,7 @@ export function AdminCreateProduct() {
       toast.success("Product created successfully");
       navigate('/admin/products');
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error("sku has been duplicated");
     }
   };
@@ -88,7 +88,6 @@ export function AdminCreateProduct() {
       case 3:
         return (
           <div className="bg-white rounded-lg shadow p-6">
-            {/* <h2 className="text-lg font-medium text-gray-900 mb-4">Product Variants</h2> */}
             <VariantForm />
           </div>
         );

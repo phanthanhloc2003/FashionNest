@@ -12,4 +12,9 @@ export const ProductApi = {
     const response = await apiClient.post("/products", data);
     return response.data;
   },
+
+  getAllProduct: async () => {
+    const response = await apiClient.get("/products");
+    return response.data;
+  },
 };

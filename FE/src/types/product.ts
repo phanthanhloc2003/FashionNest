@@ -35,17 +35,18 @@ export interface ProductVariant {
   size: string;
   color: string;
   sku: string;
-  stockQuantity: number;
+  stock_quantity: number;
   priceAdjustment: number;
 }
 
 export interface ProductFormData {
+  id?: number;
   name: string;
-  categoryId: string;
+  category: string;
   description: string;
   price: number;
-  salePrice?: number;
-  stockQuantity: number;
+  sale_price?: number;
+  stock_quantity: number;
   brand: string;
   variants: ProductVariant[];
   images: ProductImage[];

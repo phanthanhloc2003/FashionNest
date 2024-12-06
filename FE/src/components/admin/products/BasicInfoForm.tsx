@@ -57,21 +57,21 @@ export function BasicInfoForm() {
             Category
           </label>
           <select
-            {...register("categoryId")}
+            {...register("category")}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
           >
             <option value="">Select Category</option>
             {category &&
               category.map((item) => (
-                <option key={item.id} value={item.id}>
+                <option key={item.id} value={item.name}>
                   {item.name}
                 </option>
               ))}
           </select>
 
-          {errors.categoryId && (
+          {errors.category && (
             <p className="mt-1 text-sm text-red-600">
-              {errors.categoryId.message}
+              {errors.category.message}
             </p>
           )}
         </div>
@@ -82,13 +82,13 @@ export function BasicInfoForm() {
           </label>
           <input
             type="number"
-            {...register("stockQuantity", { valueAsNumber: true })}
+            {...register("stock_quantity", { valueAsNumber: true })}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
             min="0"
           />
-          {errors.stockQuantity && (
+          {errors.stock_quantity && (
             <p className="mt-1 text-sm text-red-600">
-              {errors.stockQuantity.message}
+              {errors.stock_quantity.message}
             </p>
           )}
         </div>
@@ -124,15 +124,15 @@ export function BasicInfoForm() {
             </div>
             <input
               type="number"
-              {...register("salePrice", { valueAsNumber: true })}
+              {...register("sale_price", { valueAsNumber: true })}
               className="pl-7 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
               step="0.01"
               min="0"
             />
           </div>
-          {errors.salePrice && (
+          {errors.sale_price && (
             <p className="mt-1 text-sm text-red-600">
-              {errors.salePrice.message}
+              {errors.sale_price.message}
             </p>
           )}
         </div>

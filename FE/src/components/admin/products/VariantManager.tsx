@@ -15,7 +15,7 @@ export function VariantManager({ variants, onChange }: VariantManagerProps) {
         size: '',
         color: '',
         sku: '',
-        stockQuantity: 0,
+        stock_quantity: 0,
         priceAdjustment: 0,
       },
     ]);
@@ -103,8 +103,8 @@ export function VariantManager({ variants, onChange }: VariantManagerProps) {
                 <label className="block text-sm font-medium text-gray-700">Stock</label>
                 <input
                   type="number"
-                  value={variant.stockQuantity}
-                  onChange={(e) => updateVariant(index, 'stockQuantity', parseInt(e.target.value))}
+                  value={variant.stock_quantity}
+                  onChange={(e) => updateVariant(index, 'stock_quantity', parseInt(e.target.value))}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
                   min="0"
                 />

@@ -1,28 +1,19 @@
-
-import { Link } from 'react-router-dom';
-import { Edit, Trash2, Plus } from 'lucide-react';
-import { AdminLayout } from '../components/admin/AdminLayout';
+import { Link } from "react-router-dom";
+import { Edit, Trash2, Plus } from "lucide-react";
+import { AdminLayout } from "../components/admin/AdminLayout";
+import { useEffect, useState } from "react";
+import { ProductFormData } from "../types/product";
+import { ProductApi } from "../api/product";
 
 export function AdminProducts() {
-  const products = [
-    {
-      id: 1,
-      name: "Women's Summer Floral Dress",
-      price: 299000,
-      stock: 50,
-      category: "Women's Clothing",
-      status: "In Stock",
-    },
-    {
-      id: 2,
-      name: "Men's Casual Denim Jacket",
-      price: 599000,
-      stock: 35,
-      category: "Men's Clothing",
-      status: "Low Stock",
-    },
-    // Add more products as needed
-  ];
+  const [products, setProducts] = useState<ProductFormData[] | []>([]);
+  useEffect(() => {
+    const fetcdataProduct = async () => {
+      const data = await ProductApi.getAllProduct();
+      setProducts(data);
+    };
+    fetcdataProduct();
+  }, []);
 
   return (
     <AdminLayout>
@@ -65,48 +56,53 @@ export function AdminProducts() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {products.map((product) => (
-                  <tr key={product.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {product.name}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">{product.category}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        ₫{product.price.toLocaleString()}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{product.stock}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          product.status === 'In Stock'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}
-                      >
-                        {product.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <Link
-                        to={`/admin/products/${product.id}/edit`}
-                        className="text-purple-600 hover:text-purple-900 mr-4"
-                      >
-                        <Edit className="w-5 h-5 inline" />
-                      </Link>
-                      <button className="text-red-600 hover:text-red-900">
-                        <Trash2 className="w-5 h-5 inline" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {products.length > 0 &&
+                  products.map((product) => (
+                    <tr key={product.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">
+                          {product.name}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500">
+                          {product.category}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          ₫{product.price.toLocaleString()}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {product.stock_quantity}
+                        </div>
+                      </td>
+                      {/* <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            product.status === "In Stock"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
+                          {product.status}
+                        </span>
+                      </td> */}
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <Link
+                          to={`/admin/products/${product.id}/edit`}
+                          className="text-purple-600 hover:text-purple-900 mr-4"
+                        >
+                          <Edit className="w-5 h-5 inline" />
+                        </Link>
+                        <button className="text-red-600 hover:text-red-900">
+                          <Trash2 className="w-5 h-5 inline" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
