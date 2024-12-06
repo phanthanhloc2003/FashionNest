@@ -40,9 +40,10 @@ export class Authservices {
 
   async login(user: UserNoPassword, response: Response) {
     const refreshToken = this.createRefreshToken(user);
-    response.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+    response.cookie('c_user', refreshToken, {
+      maxAge: 24 * 60 * 60 * 1000, // Thời gian sống của cookie: 1 ngày
+      httpOnly: true, // Cookie không thể truy cập từ JavaScript
+      secure: false, // Chỉ bật nếu chạy HTTP
     });
     const payload = {
       id: user.id,

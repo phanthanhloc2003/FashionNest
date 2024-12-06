@@ -1,4 +1,12 @@
-import { Controller, Post, Req, Request, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Req,
+  Request,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { PublicRouter } from 'src/decorators/public-router.decorator';
 import { LocalAuthGuard } from 'src/guard/local-auth.guard';
@@ -14,10 +22,8 @@ export class AuthController {
     return this.authService.login(req.user, response);
   }
   @PublicRouter()
-  @Post('refresh-token')
+  @Get('refresh-token')
   async refreshToken(@Req() request: RequestCookie) {
-    return await this.authService.handleRefreshToken(
-      request.cookies['refreshToken'],
-    );
+    return await this.authService.handleRefreshToken(request.cookies['c_user']);
   }
 }
