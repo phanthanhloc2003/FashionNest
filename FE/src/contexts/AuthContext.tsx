@@ -1,11 +1,21 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { User } from '../types/auth';
-import { authApi } from '../api/userApi';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
+import { User } from "../types/auth";
+import { authApi } from "../api/userApi";
 
 interface AuthContextType {
   user: User | null;
   login: (phone: string, password: string) => Promise<void>;
-  register: (data: { phone: string; password: string; fullName: string }) => Promise<void>;
+  register: (data: {
+    phone: string;
+    password: string;
+    fullName: string;
+  }) => Promise<void>;
   logout: () => Promise<void>;
   isLoading: boolean;
 }
@@ -16,9 +26,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
-    
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+
     if (token && userData) {
       setUser(JSON.parse(userData));
     }
@@ -27,37 +37,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(async (phone: string, password: string) => {
     try {
-      const { user: userData, access_token } = await authApi.login(phone, password);
-      localStorage.setItem('token', access_token);
-      localStorage.setItem('user', JSON.stringify(userData));
+      const { user: userData, access_token } = await authApi.login(
+        phone,
+        password
+      );
+      localStorage.setItem("token", access_token);
+      localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
     } catch (error) {
       throw error;
     }
   }, []);
 
-  const register = useCallback(async (data: { phone: string; password: string; fullName: string }) => {
-    try {
-      await authApi.register(data);
-    } catch (error) {
-      throw error;
-    }
-  }, []);
+  const register = useCallback(
+    async (data: { phone: string; password: string; fullName: string }) => {
+      try {
+        await authApi.register(data);
+      } catch (error) {
+        throw error;
+      }
+    },
+    []
+  );
 
   const logout = useCallback(async () => {
     try {
       await authApi.logout();
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       setUser(null);
     } catch (error) {
-      console.error('Logout error:', error);
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      console.error("Logout error:", error);
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       setUser(null);
     }
   }, []);
-
   return (
     <AuthContext.Provider value={{ user, login, register, logout, isLoading }}>
       {children}
@@ -68,7 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

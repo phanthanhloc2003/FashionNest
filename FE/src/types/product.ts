@@ -27,7 +27,7 @@ export interface Review {
 
 export interface ProductImage {
   id?: number;
-  imageUrl: string;
+  image_url: string;
   isPrimary: boolean;
 }
 export interface ProductVariant {
@@ -49,4 +49,9 @@ export interface ProductFormData {
   brand: string;
   variants: ProductVariant[];
   images: ProductImage[];
+}
+
+export interface CategotyData {
+  id: number;
+  name: string;
 }

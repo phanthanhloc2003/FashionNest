@@ -27,7 +27,7 @@ export function ImageForm() {
             }`}
           >
             <img
-              src={field.imageUrl}
+              src={field.image_url}
               alt={`Product ${index + 1}`}
               className="w-full h-40 object-cover"
             />
@@ -55,7 +55,7 @@ export function ImageForm() {
                 Primary
               </span>
             )}
-            <input type="hidden" {...register(`images.${index}.imageUrl`)} />
+            <input type="hidden" {...register(`images.${index}.image_url`)} />
             <input type="hidden" {...register(`images.${index}.isPrimary`)} />
           </div>
         ))}
@@ -70,7 +70,7 @@ export function ImageForm() {
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
                   const input = e.target as HTMLInputElement;
-                  append({ imageUrl: input.value, isPrimary: fields.length === 0 });
+                  append({ image_url: input.value, isPrimary: fields.length === 0 });
                   input.value = '';
                 }
               }}

@@ -10,7 +10,7 @@ interface ImageUploaderProps {
 export function ImageUploader({ images, onChange }: ImageUploaderProps) {
   const handleImageAdd = (url: string) => {
     const newImage: ProductImage = {
-      imageUrl: url,
+      image_url: url,
       isPrimary: images.length === 0, // First image is primary by default
     };
     onChange([...images, newImage]);
@@ -43,7 +43,7 @@ export function ImageUploader({ images, onChange }: ImageUploaderProps) {
             }`}
           >
             <img
-              src={image.imageUrl}
+              src={image.image_url}
               alt={`Product ${index + 1}`}
               className="w-full h-40 object-cover"
             />
