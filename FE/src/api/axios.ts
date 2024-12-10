@@ -1,6 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { authApi } from "./userApi";
-
+import { authApi } from "./authApi";
 const apiClient: AxiosInstance = axios.create({
   baseURL: "http://localhost:3333/api/v1",
   headers: {
@@ -50,5 +49,4 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 export default apiClient;

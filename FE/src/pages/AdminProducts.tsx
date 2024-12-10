@@ -3,14 +3,12 @@ import { Edit, Trash2, Plus } from "lucide-react";
 import { AdminLayout } from "../components/admin/AdminLayout";
 import { useEffect, useState } from "react";
 import { ProductFormData } from "../types/product";
-import { ProductApi } from "../api/product";
-
 export function AdminProducts() {
   const [products, setProducts] = useState<ProductFormData[] | []>([]);
   useEffect(() => {
     const fetcdataProduct = async () => {
-      const data = await ProductApi.getAllProduct();
-      setProducts(data);
+      // const data = await ProductApi.getAllProduct();
+      // setProducts(data);
     };
     fetcdataProduct();
   }, []);
@@ -79,17 +77,17 @@ export function AdminProducts() {
                           {product.stock_quantity}
                         </div>
                       </td>
-                      {/* <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <span
                           className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            product.status === "In Stock"
+                            product.stock_quantity > 0
                               ? "bg-green-100 text-green-800"
                               : "bg-yellow-100 text-yellow-800"
                           }`}
                         >
-                          {product.status}
+                          {product.stock_quantity > 0 ? "in stock" : 'out of stock'}
                         </span>
-                      </td> */}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <Link
                           to={`/admin/products/${product.id}/edit`}

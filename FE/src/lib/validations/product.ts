@@ -22,7 +22,6 @@ export const productSchema = z.object({
     .number()
     .min(0, "Sale price must be greater than or equal to 0")
     .optional(),
-    stock_quantity: z.number().min(0, "Stock must be greater than or equal to 0"),
   brand: z.string().min(1, "Brand is required"),
   variants: z
     .array(productVariantSchema)

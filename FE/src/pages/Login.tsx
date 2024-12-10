@@ -20,7 +20,6 @@ export function Login() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
-
   const onSubmit = async (data: LoginFormData) => {
     try {
       await login(data.phone, data.password);

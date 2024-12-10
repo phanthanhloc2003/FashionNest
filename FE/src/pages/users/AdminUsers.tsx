@@ -1,44 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Edit, Trash2, UserPlus } from 'lucide-react';
-
-import toast from 'react-hot-toast';
-import { AdminLayout } from '../../components/admin/AdminLayout';
-import { User } from '../../types/auth';
-import { adminApi } from '../../api/admin';
+import React from "react";
+import { Edit, Trash2, UserPlus } from "lucide-react";
+import toast from "react-hot-toast";
+import { AdminLayout } from "../../components/admin/AdminLayout";
+import { useGetAllUsersQuery, useDeleteUserMutation } from "../../api/adminApi";
 
 export function AdminUsers() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: users, isLoading, error, refetch } = useGetAllUsersQuery();
+  const [deleteUser] = useDeleteUserMutation();
 
-  useEffect(() => {
-    loadUsers();
-  }, []);
+  const handleDeleteUser = async (phone: string) => {
+    if (!window.confirm("Are you sure you want to delete this user?")) return;
 
-  const loadUsers = async () => {
     try {
-      setLoading(true);
-      const data = await adminApi.getUsers();
-      setUsers(data);
+      await deleteUser(phone).unwrap();
+      toast.success("User deleted successfully");
+      refetch();
     } catch (error) {
-      toast.error('Failed to load users');
-    } finally {
-      setLoading(false);
+      toast.error("Failed to delete user");
     }
   };
 
-  const handleDeleteUser = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this user?')) return;
-
-    try {
-      await adminApi.deleteUser(id);
-      toast.success('User deleted successfully');
-      loadUsers();
-    } catch (error) {
-      toast.error('Failed to delete user');
-    }
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <AdminLayout>
         <div className="flex justify-center items-center h-64">
@@ -46,6 +28,10 @@ export function AdminUsers() {
         </div>
       </AdminLayout>
     );
+  }
+
+  if (error) {
+    return <div>Error loading users</div>;
   }
 
   return (
@@ -81,7 +67,7 @@ export function AdminUsers() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {users.map((user) => (
+              {(users || []).map((user) => (
                 <tr key={user.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -91,7 +77,9 @@ export function AdminUsers() {
                         </span>
                       </div>
                       <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">{user.fullName}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {user.fullName}
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -99,29 +87,33 @@ export function AdminUsers() {
                     <div className="text-sm text-gray-500">{user.phone}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      user.role === 'admin' 
-                        ? 'bg-purple-100 text-purple-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
+                    <span
+                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        user.role === "admin"
+                          ? "bg-purple-100 text-purple-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
                       {user.role}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      user.isActive
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {user.isActive ? 'Active' : 'Inactive'}
+                    <span
+                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        user.isActive
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {user.isActive ? "Active" : "Inactive"}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button className="text-purple-600 hover:text-purple-900 mr-4">
                       <Edit className="w-5 h-5 inline" />
                     </button>
-                    <button 
-                      onClick={() => handleDeleteUser(user.id)}
+                    <button
+                      onClick={() => handleDeleteUser(user.phone)}
                       className="text-red-600 hover:text-red-900"
                     >
                       <Trash2 className="w-5 h-5 inline" />

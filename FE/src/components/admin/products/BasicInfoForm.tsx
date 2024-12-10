@@ -1,7 +1,6 @@
 import { useFormContext } from "react-hook-form";
-import type { CategotyData, ProductFormData } from "../../../types/product";
-import { useEffect, useState } from "react";
-import { ProductApi } from "../../../api/product";
+import type {  ProductFormData } from "../../../types/product";
+import { useGetCategoriesQuery } from "../../../api/productApi";
 
 export function BasicInfoForm() {
   const {
@@ -9,15 +8,15 @@ export function BasicInfoForm() {
     formState: { errors },
   } = useFormContext<ProductFormData>();
 
-  const [category, setCategory] = useState<CategotyData[]>([]);
+  const { data: categories, isLoading, isError } = useGetCategoriesQuery();
 
-  useEffect(() => {
-    const fectdataCategory = async () => {
-      const data = await ProductApi.getCategoty();
-      setCategory(data);
-    };
-    fectdataCategory();
-  }, []);
+  if (isLoading) {
+    return <p>Loading categories...</p>;
+  }
+
+  if (isError) {
+    return <p>Failed to load categories</p>;
+  }
 
   return (
     <div className="space-y-6">
@@ -61,8 +60,8 @@ export function BasicInfoForm() {
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
           >
             <option value="">Select Category</option>
-            {category &&
-              category.map((item) => (
+            {categories &&
+              categories.map((item) => (
                 <option key={item.id} value={item.name}>
                   {item.name}
                 </option>
@@ -78,23 +77,6 @@ export function BasicInfoForm() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Base Stock Quantity
-          </label>
-          <input
-            type="number"
-            {...register("stock_quantity", { valueAsNumber: true })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
-            min="0"
-          />
-          {errors.stock_quantity && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.stock_quantity.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
             Regular Price
           </label>
           <div className="mt-1 relative rounded-md shadow-sm">
@@ -103,10 +85,9 @@ export function BasicInfoForm() {
             </div>
             <input
               type="number"
-              {...register("price", { valueAsNumber: true })}
+              {...register("price", { valueAsNumber: true, min: 0 })}
               className="pl-7 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
               step="0.01"
-              min="0"
             />
           </div>
           {errors.price && (
@@ -124,10 +105,9 @@ export function BasicInfoForm() {
             </div>
             <input
               type="number"
-              {...register("sale_price", { valueAsNumber: true })}
+              {...register("sale_price", { valueAsNumber: true, min: 0 })}
               className="pl-7 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
               step="0.01"
-              min="0"
             />
           </div>
           {errors.sale_price && (

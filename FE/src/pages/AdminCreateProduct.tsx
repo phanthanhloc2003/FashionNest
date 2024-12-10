@@ -9,7 +9,6 @@ import { ImageForm } from "../components/admin/products/ImageForm";
 import { BasicInfoForm } from "../components/admin/products/BasicInfoForm";
 import { VariantForm } from "../components/admin/products/VariantForm";
 import { AdminLayout } from "../components/admin/AdminLayout";
-import { ProductApi } from "../api/product";
 
 export function AdminCreateProduct() {
   const navigate = useNavigate();
@@ -38,7 +37,6 @@ export function AdminCreateProduct() {
         "category",
         "description",
         "price",
-        "stock_quantity",
         "brand",
       ]);
     } else if (currentStep === 2) {
@@ -56,7 +54,7 @@ export function AdminCreateProduct() {
 
   const onSubmit = async (data: ProductFormData) => {
     try {
-      await ProductApi.createProduct(data);
+      // await ProductApi.createProduct(data);
       toast.success("Product created successfully");
       navigate('/admin/products');
     } catch (error) {

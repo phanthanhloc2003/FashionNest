@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useEffect, useState } from "react";
-import { authApi } from "../api/userApi";
+import { authApi } from "../api/authApi";
 import { User } from "../types/auth";
 
 export function AdminRoute({ children }: { children: React.ReactNode }) {

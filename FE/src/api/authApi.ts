@@ -1,4 +1,4 @@
-import { User } from "../types/auth";
+import { accessToken } from "../types/auth";
 import apiClient from "./axios";
 
 export const authApi = {
@@ -30,10 +30,12 @@ export const authApi = {
     return response.data;
   },
 
-  refresherToken: async (): Promise<User> => {
+  refresherToken: async (): Promise<accessToken> => {
     const response = await apiClient.get("/auth/refresh-token", {
       withCredentials: true,
     });
     return response.data;
   },
+
+ 
 };
