@@ -5,10 +5,7 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
 } from 'typeorm';
-import { Category } from './category.entity';
-
 import { ProductImage } from './product-image.entity';
 import { ProductVariant } from './product-variant.entity';
 
@@ -17,8 +14,8 @@ export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Category, (Category) => Category.id)
-  category_id: number;
+  @Column({ length: 255 })
+  category: string;
 
   @Column({ length: 255 })
   name: string;
@@ -44,9 +41,11 @@ export class Product {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToMany(() => ProductVariant, (variant) => variant.product)
+  @OneToMany(() => ProductVariant, (variant) => variant.product, {
+    cascade: true,
+  })
   variants: ProductVariant[];
 
-  @OneToMany(() => ProductImage, (image) => image.product)
+  @OneToMany(() => ProductImage, (image) => image.product, { cascade: true })
   images: ProductImage[];
 }

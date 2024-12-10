@@ -53,8 +53,8 @@ export class UsersController {
   @Get()
   @Roles(Role.Admin)
   @UseGuards(RolesGuard)
-  async getAllUsers(): Promise<users[]> {
-    return await this.usersService.findAll();
+  async getAllUsers(@User() user: UserNoPassword): Promise<users[]> {
+    return await this.usersService.findAll(user.id);
   }
 
   @Get('role')

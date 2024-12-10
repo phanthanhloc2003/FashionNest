@@ -10,7 +10,7 @@ import { RegisterUserBodyDTO, UpdateUsersDTO } from 'src/dto/ create-user.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { User, UserNoPassword } from 'src/entitys/user.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Not, Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -127,8 +127,12 @@ export class UserService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.userRepository.find();
+  async findAll(userId: number): Promise<User[]> {
+    return await this.userRepository.find({
+      where: {
+        id: Not(userId),
+      },
+    });
   }
 
   async findRole(user: UserNoPassword): Promise<UserNoPassword> {

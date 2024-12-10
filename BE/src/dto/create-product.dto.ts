@@ -18,10 +18,6 @@ export class CreateProductDto {
   @IsOptional()
   sale_price?: number;
 
-  @IsNumber()
-  @Min(0)
-  stock_quantity: number;
-
   @IsString()
   @IsOptional()
   brand?: string;

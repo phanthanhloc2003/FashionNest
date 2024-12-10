@@ -25,6 +25,9 @@ export class User {
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  avatar: string;
+
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
 

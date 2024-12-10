@@ -26,4 +26,11 @@ export class AuthController {
   async refreshToken(@Req() request: RequestCookie) {
     return await this.authService.handleRefreshToken(request.cookies['c_user']);
   }
+
+  @Get('logout')
+  async logOut(
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<{ message: string }> {
+    return await this.authService.handleLogout(response);
+  }
 }

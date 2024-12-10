@@ -32,9 +32,13 @@ export class ProductsService {
     try {
       const { variants, images, ...productData } = body;
 
-      const newProduct = this.productRepository.create(productData);
+      // Tạo và lưu sản phẩm mới
+      const newProduct = this.productRepository.create({
+        ...productData,
+      });
       await this.productRepository.save(newProduct);
 
+      // Xử lý variants nếu có
       if (variants?.length) {
         const variantEntities = variants.map((variant) =>
           this.variantRepository.create({
@@ -43,8 +47,13 @@ export class ProductsService {
           }),
         );
         await this.variantRepository.save(variantEntities);
+        const totalStock = variants.reduce(
+          (sum, variant) => sum + (variant.stock_quantity || 0),
+          0,
+        );
+        newProduct.stock_quantity = totalStock;
+        await this.productRepository.save(newProduct);
       }
-
       if (images?.length) {
         const imageEntities = images.map((image) =>
           this.imageRepository.create({
@@ -59,11 +68,10 @@ export class ProductsService {
         relations: ['variants', 'images'],
       });
     } catch (error) {
-      console.error('Error creating product:', error);
+      console.error('Error creating product:', error.message || error);
       throw new Error('Failed to create product. Please try again.');
     }
   }
-
   async getProduct(): Promise<Product[]> {
     try {
       return await this.productRepository.find();

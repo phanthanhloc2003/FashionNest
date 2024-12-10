@@ -74,7 +74,6 @@ export class Authservices {
 
       return {
         accessToken: this.jwtService.sign(payloadResponse),
-        userInfo: payloadResponse,
       };
     } catch {
       throw new UnauthorizedException();
@@ -87,5 +86,9 @@ export class Authservices {
       expiresIn: time ?? this.configService.get<string>('TIME_REFRESH_TOKEN'),
     });
     return refreshToken;
+  }
+  async handleLogout(response: Response): Promise<{ message: string }> {
+    response.clearCookie('c_user');
+    return { message: 'Logged out successfully' };
   }
 }
